@@ -173,3 +173,95 @@ class SweetServiceTest {
         verify(sweetRepository).deleteById(1L);
     }
 
+    /**
+     * Test case: Delete a non-existent sweet
+     * Given: Sweet with ID 1 does not exist in repository
+     * When: deleteSweet(1L) is called
+     * Then: RuntimeException is thrown and no deletion occurs
+     * 
+     * Verifies: Proper validation and error handling; deleteById never called
+     */
+    @Test
+    void testDeleteSweet_NotFound() {
+        when(sweetRepository.existsById(1L)).thenReturn(false);
+
+        assertThrows(RuntimeException.class, () -> sweetService.deleteSweet(1L));
+        verify(sweetRepository, never()).deleteById(anyLong());
+    }
+
+    /**
+     * Test case: Search sweets with filter criteria
+     * Given: Repository contains a sweet matching search criteria (name and category)
+     * When: searchSweets("Gulab", "Indian", null, null) is called
+     * Then: List with matching sweet is returned
+     * 
+     * Verifies: Correct filtering and data mapping
+     */
+    @Test
+    void testSearchSweets() {
+        when(sweetRepository.search("Gulab", "Indian", null, null))
+                .thenReturn(Arrays.asList(sweet));
+
+        List<SweetDTO> result = sweetService.searchSweets("Gulab", "Indian", null, null);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+    }
+
+    /**
+     * Test case: Purchase a sweet with sufficient quantity
+     * Given: Sweet with ID 1 has quantity 100 and request is for 10 units
+     * When: purchaseSweet(1L, 10) is called
+     * Then: Quantity is reduced by 10 (100 -> 90) and saved
+     * 
+     * Verifies: Correct inventory deduction and persistence
+     */
+    @Test
+    void testPurchaseSweet_Success() {
+        when(sweetRepository.findById(1L)).thenReturn(Optional.of(sweet));
+        when(sweetRepository.save(any(Sweet.class))).thenReturn(sweet);
+
+        SweetDTO result = sweetService.purchaseSweet(1L, 10);
+
+        assertNotNull(result);
+        assertEquals(90, result.getQuantity());
+        verify(sweetRepository).save(any(Sweet.class));
+    }
+
+    /**
+     * Test case: Purchase a sweet with insufficient quantity
+     * Given: Sweet with ID 1 has quantity 100 but request is for 150 units
+     * When: purchaseSweet(1L, 150) is called
+     * Then: RuntimeException is thrown and no save operation occurs
+     * 
+     * Verifies: Inventory validation and prevention of overselling
+     */
+    @Test
+    void testPurchaseSweet_InsufficientQuantity() {
+        when(sweetRepository.findById(1L)).thenReturn(Optional.of(sweet));
+
+        assertThrows(RuntimeException.class, () -> sweetService.purchaseSweet(1L, 150));
+        verify(sweetRepository, never()).save(any(Sweet.class));
+    }
+
+    /**
+     * Test case: Restock a sweet successfully
+     * Given: Sweet with ID 1 has quantity 100 and restock quantity is 50
+     * When: restockSweet(1L, 50) is called
+     * Then: Quantity is increased by 50 (100 -> 150) and saved
+     * 
+     * Verifies: Correct inventory replenishment and persistence
+     */
+    @Test
+    void testRestockSweet_Success() {
+        when(sweetRepository.findById(1L)).thenReturn(Optional.of(sweet));
+        when(sweetRepository.save(any(Sweet.class))).thenReturn(sweet);
+
+        SweetDTO result = sweetService.restockSweet(1L, 50);
+
+        assertNotNull(result);
+        assertEquals(150, result.getQuantity());
+        verify(sweetRepository).save(any(Sweet.class));
+    }
+}
+
