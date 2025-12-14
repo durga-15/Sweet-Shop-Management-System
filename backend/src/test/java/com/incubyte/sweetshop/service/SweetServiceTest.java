@@ -78,5 +78,23 @@ class SweetServiceTest {
         verify(sweetRepository).save(any(Sweet.class));
     }
 
-    
+    /**
+     * Test case: Retrieve all sweets from the database
+     * Given: Repository contains one sweet item
+     * When: getAllSweets() is called
+     * Then: List with one sweet is returned
+     * 
+     * Verifies: Correct data mapping from entity to DTO
+     */
+    @Test
+    void testGetAllSweets() {
+        when(sweetRepository.findAll()).thenReturn(Arrays.asList(sweet));
+
+        List<SweetDTO> result = sweetService.getAllSweets();
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Gulab Jamun", result.get(0).getName());
+    }
+
 
