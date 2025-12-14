@@ -136,28 +136,6 @@ git clone https://github.com/durga-15/Sweet-Shop-Management-System.git
    npm run dev
    ```
 
-### 5. Running Tests
-
-#### Backend Tests
-
-Running all tests using Maven:
-```bash
-cd backend
-mvn test
-```
-
-Running specific test class:
-```bash
-mvn test -Dtest=AuthServiceTest
-```
-
-#### Frontend Tests
-
-```bash
-cd frontend
-npm test
-```
-
 ## API Endpoints
 
 ### Authentication Endpoints
