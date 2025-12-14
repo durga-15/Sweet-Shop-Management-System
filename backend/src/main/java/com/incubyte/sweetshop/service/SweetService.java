@@ -114,4 +114,101 @@ public class SweetService {
         // Delete the sweet from database
         sweetRepository.deleteById(id);
     }
+
+    /**
+     * SEARCH SWEETS - Find sweets matching certain criteria
+     * 
+     * Receives: optional filters (name, category, minPrice, maxPrice)
+     * Returns: list of sweets matching the search criteria
+     */
+    public List<SweetDTO> searchSweets(String name, String category, BigDecimal minPrice, BigDecimal maxPrice) {
+        // Query database with search filters
+        List<Sweet> sweets = sweetRepository.search(name, category, minPrice, maxPrice);
+        // Convert each result to DTO
+        return sweets.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * PURCHASE SWEET - Reduce stock when a customer buys a sweet
+     * 
+     * Receives: sweet ID and quantity to purchase
+     * Updates: reduces the quantity in stock
+     * Throws: error if not enough stock
+     * 
+     * @Transactional ensures the operation completes fully or not at all
+     */
+    @Transactional  // Ensures this operation is all-or-nothing (atomic)
+    public SweetDTO purchaseSweet(Long id, Integer quantity) {
+        // Find sweet in database
+        Sweet sweet = sweetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sweet not found with id: " + id));
+
+        // Check if there's enough stock available
+        if (sweet.getQuantity() < quantity) {
+            throw new RuntimeException("Insufficient quantity available. Available: " + sweet.getQuantity());
+        }
+
+        // Reduce quantity by the amount purchased
+        sweet.setQuantity(sweet.getQuantity() - quantity);
+        // Save updated stock level to database
+        sweet = sweetRepository.save(sweet);
+        // Return updated sweet
+        return convertToDTO(sweet);
+    }
+
+    /**
+     * RESTOCK SWEET - Increase stock when admin restocks items
+     * 
+     * Receives: sweet ID and quantity to add
+     * Updates: increases the quantity in stock
+     * 
+     * @Transactional ensures the operation completes fully or not at all
+     */
+    @Transactional  // Ensures this operation is all-or-nothing (atomic)
+    public SweetDTO restockSweet(Long id, Integer quantity) {
+        // Find sweet in database
+        Sweet sweet = sweetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sweet not found with id: " + id));
+
+        // Add the new quantity to existing stock
+        sweet.setQuantity(sweet.getQuantity() + quantity);
+        // Save updated stock level to database
+        sweet = sweetRepository.save(sweet);
+        // Return updated sweet
+        return convertToDTO(sweet);
+    }
+
+    /**
+     * CONVERT TO DTO - Transforms database entity to frontend data format
+     * 
+     * DTO = Data Transfer Object (simplified format for sending to frontend)
+     * Helps separate what we store in database from what we send to users
+     */
+    private SweetDTO convertToDTO(Sweet sweet) {
+        SweetDTO dto = new SweetDTO();
+        dto.setId(sweet.getId());
+        dto.setName(sweet.getName());
+        dto.setCategory(sweet.getCategory());
+        dto.setPrice(sweet.getPrice());
+        dto.setQuantity(sweet.getQuantity());
+        return dto;
+    }
+
+    /**
+     * CONVERT TO ENTITY - Transforms frontend data to database entity format
+     * 
+     * Entity = Database record format (how data is stored in the database)
+     * Helps separate what we receive from frontend from how we store it
+     */
+    private Sweet convertToEntity(SweetDTO dto) {
+        return Sweet.builder()
+                .name(dto.getName())
+                .category(dto.getCategory())
+                .price(dto.getPrice())
+                .quantity(dto.getQuantity())
+                .build();
+    }
+}
     
