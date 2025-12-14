@@ -130,3 +130,46 @@ class SweetServiceTest {
         assertThrows(RuntimeException.class, () -> sweetService.getSweetById(1L));
     }
 
+    /**
+     * Test case: Update an existing sweet successfully
+     * Given: Sweet with ID 1 exists and update DTO has new values
+     * When: updateSweet(1L, updateDTO) is called
+     * Then: Sweet is updated and saved to repository
+     * 
+     * Verifies: Repository save and find methods are called appropriately
+     */
+    @Test
+    void testUpdateSweet_Success() {
+        SweetDTO updateDTO = new SweetDTO();
+        updateDTO.setName("Updated Gulab Jamun");
+        updateDTO.setCategory("Indian");
+        updateDTO.setPrice(new BigDecimal("55.00"));
+        updateDTO.setQuantity(150);
+
+        when(sweetRepository.findById(1L)).thenReturn(Optional.of(sweet));
+        when(sweetRepository.save(any(Sweet.class))).thenReturn(sweet);
+
+        SweetDTO result = sweetService.updateSweet(1L, updateDTO);
+
+        assertNotNull(result);
+        verify(sweetRepository).save(any(Sweet.class));
+    }
+
+    /**
+     * Test case: Delete a sweet successfully
+     * Given: Sweet with ID 1 exists in repository
+     * When: deleteSweet(1L) is called
+     * Then: Sweet is deleted from database
+     * 
+     * Verifies: Repository deleteById is called exactly once
+     */
+    @Test
+    void testDeleteSweet_Success() {
+        when(sweetRepository.existsById(1L)).thenReturn(true);
+        doNothing().when(sweetRepository).deleteById(1L);
+
+        sweetService.deleteSweet(1L);
+
+        verify(sweetRepository).deleteById(1L);
+    }
+
