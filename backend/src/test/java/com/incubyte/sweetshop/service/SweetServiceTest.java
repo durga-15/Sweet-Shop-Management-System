@@ -97,4 +97,36 @@ class SweetServiceTest {
         assertEquals("Gulab Jamun", result.get(0).getName());
     }
 
+     /**
+     * Test case: Get a sweet by ID - happy path
+     * Given: Sweet with ID 1 exists in repository
+     * When: getSweetById(1L) is called
+     * Then: SweetDTO is returned with correct data
+     * 
+     * Verifies: Correct sweet is retrieved and mapped properly
+     */
+    @Test
+    void testGetSweetById_Success() {
+        when(sweetRepository.findById(1L)).thenReturn(Optional.of(sweet));
+
+        SweetDTO result = sweetService.getSweetById(1L);
+
+        assertNotNull(result);
+        assertEquals("Gulab Jamun", result.getName());
+    }
+
+    /**
+     * Test case: Get a sweet by non-existent ID
+     * Given: Sweet with ID 1 does not exist in repository
+     * When: getSweetById(1L) is called
+     * Then: RuntimeException is thrown
+     * 
+     * Verifies: Proper error handling for missing resources
+     */
+    @Test
+    void testGetSweetById_NotFound() {
+        when(sweetRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> sweetService.getSweetById(1L));
+    }
 
