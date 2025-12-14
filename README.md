@@ -49,8 +49,7 @@ Incubyte/
 │   ├── vite.config.ts                 (Vite configuration)
 │   └── tsconfig.json                  (TypeScript configuration)
 ├── database-setup.sql                 (Database initialization script)
-├── docker-compose.yml                 (Docker configuration)
-└── README.md                          (This file)
+└── README.md                          (
 ```
 
 ## Requirements
