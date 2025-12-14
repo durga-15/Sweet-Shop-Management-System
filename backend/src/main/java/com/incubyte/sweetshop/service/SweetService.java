@@ -61,4 +61,18 @@ public class SweetService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * GET SWEET BY ID - Find a specific sweet by its ID
+     * 
+     * Receives: sweet ID
+     * Returns: the specific sweet details
+     * Throws: error if sweet not found
+     */
+    public SweetDTO getSweetById(Long id) {
+        // Find sweet in database, throw error if not found
+        Sweet sweet = sweetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sweet not found with id: " + id));
+        // Convert to DTO and return
+        return convertToDTO(sweet);
+    }
     
