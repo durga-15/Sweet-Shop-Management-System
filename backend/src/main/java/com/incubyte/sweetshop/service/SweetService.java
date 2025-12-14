@@ -47,4 +47,18 @@ public class SweetService {
         return convertToDTO(sweet);
     }
 
+    /**
+     * GET ALL SWEETS - Retrieve every sweet in the database
+     * 
+     * Returns a list of all available sweets
+     */
+    public List<SweetDTO> getAllSweets() {
+        // Get all sweets from database
+        return sweetRepository.findAll().stream()
+                // Convert each database entity to DTO for frontend
+                .map(this::convertToDTO)
+                // Collect results into a list
+                .collect(Collectors.toList());
+    }
+
     
