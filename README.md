@@ -216,27 +216,14 @@ This section documents my comprehensive use of AI tools throughout the developme
 - **ChatGPT**: Explained JWT best practices, token expiration strategies, and role-based access control implementation
 - **Claude**: Reviewed security code for vulnerabilities, suggested enhancements to password hashing and token management
 
-#### 3. Frontend Development (React/TypeScript)
+#### 4. Frontend Development (React/TypeScript)
 
 **API Integration**:
 
 - **ChatGPT**: Generated Axios configuration, request/response interceptors, and API service layer. Provided guidance on error handling, request/response transformation, and token injection patterns
 - **Claude**: Suggested improvements to API service architecture and error boundary implementation
 
-#### 4. Testing
-
-- **GitHub Copilot**: Generated unit test templates and test setup code
-- **ChatGPT**: Explained testing best practices, mock data creation, and assertion patterns
-- **Claude**: Reviewed test cases for completeness and coverage
-
-#### 5. Documentation
-
-- **GitHub Copilot**: Generated code comments and inline documentation
-- **ChatGPT**: Helped structure README sections, API documentation, TDD methodology documentation, and setup instructions
-- **Claude**: Reviewed and enhanced documentation for clarity and completeness, generated the ARCHITECTURE.md file with detailed flow diagrams
-- **GitHub Copilot**: Generated comprehensive comments in code files for non-technical understanding
-
-#### 7. Bug Fixing and Debugging
+#### 5. Bug Fixing and Debugging
 
 - **ChatGPT**: Explained error causes, suggested debugging approaches, and alternative solutions
 - **Claude**: Performed code review for identified issues, suggested refactoring to prevent similar bugs
@@ -254,9 +241,6 @@ This project implements a complete Sweet Shop Management System with a running s
 - Complete CRUD operations for sweets inventory
 - Purchase and inventory management features
 - Database persistence with PostgreSQL
-- Comprehensive test coverage
-
-The project is fully functional and production-ready, demonstrating best practices in modern full-stack development with Spring Boot and React.
 
 ## License
 
