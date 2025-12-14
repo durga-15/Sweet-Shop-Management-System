@@ -75,4 +75,43 @@ public class SweetService {
         // Convert to DTO and return
         return convertToDTO(sweet);
     }
+
+    /**
+     * UPDATE SWEET - Modify a sweet's information
+     * 
+     * Receives: sweet ID and new sweet details
+     * Updates: name, category, price, quantity
+     * Returns: the updated sweet
+     */
+    public SweetDTO updateSweet(Long id, SweetDTO sweetDTO) {
+        // Find the sweet in database, throw error if not found
+        Sweet existingSweet = sweetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sweet not found with id: " + id));
+
+        // Update all fields with new values
+        existingSweet.setName(sweetDTO.getName());
+        existingSweet.setCategory(sweetDTO.getCategory());
+        existingSweet.setPrice(sweetDTO.getPrice());
+        existingSweet.setQuantity(sweetDTO.getQuantity());
+
+        // Save updated sweet to database
+        existingSweet = sweetRepository.save(existingSweet);
+        // Convert to DTO and return
+        return convertToDTO(existingSweet);
+    }
+
+    /**
+     * DELETE SWEET - Remove a sweet from the database
+     * 
+     * Receives: sweet ID
+     * Throws: error if sweet not found
+     */
+    public void deleteSweet(Long id) {
+        // Check if sweet exists in database
+        if (!sweetRepository.existsById(id)) {
+            throw new RuntimeException("Sweet not found with id: " + id);
+        }
+        // Delete the sweet from database
+        sweetRepository.deleteById(id);
+    }
     
