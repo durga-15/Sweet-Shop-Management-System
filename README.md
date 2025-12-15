@@ -241,6 +241,9 @@ This project implements a complete Sweet Shop Management System with a running s
 - Purchase and inventory management features
 - Database persistence with PostgreSQL
 
+## ScreenShot
+<img src = "Screenshot 2025-12-15 092514.png" width="400 px">
+
 ## License
 
 This project is created as an Incubyte Assessment.
